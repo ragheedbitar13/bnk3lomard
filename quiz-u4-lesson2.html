@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار — بنك الأسئلة</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <a href="index.html" style="display:flex;align-items:center;gap:10px;">
+      <span class="mark" aria-hidden="true"></span>
+      بنك الأسئلة
+    </a>
+  </div>
+  <div class="crumbs">
+    <a href="index.html">الرئيسية</a>
+    <span class="sep">/</span>
+    <a href="subject-earth-science.html">علوم الأرض</a>
+    <span class="sep">/</span>
+    <span id="lessonSub">...</span>
+  </div>
+</div>
+
+<main class="page">
+
+  <!-- ============ شاشة البدء ============ -->
+  <section id="startScreen">
+    <span class="eyebrow">🎯 قبل ما تبلش</span>
+    <h1 id="lessonTitle" style="font-size:clamp(1.8rem,4vw,2.5rem);">...</h1>
+
+    <div class="start-card">
+      <h2 style="font-size:1.1rem; margin-bottom:6px;">اختر نطاق الاختبار</h2>
+      <p style="color:var(--ink-dim); font-size:.92rem;">كل مستوى صعوبة هو طبقة من طبقات الأرض — ابدأ من القشرة أو انزل على طول للُبّ.</p>
+
+      <div class="mode-grid">
+        <div class="mode-card" data-mode="all">
+          <span class="n num" id="cnt-all">-</span>
+          <span class="lbl">كل الأسئلة</span>
+        </div>
+        <div class="mode-card" data-mode="easy">
+          <span class="n num" id="cnt-easy">-</span>
+          <span class="lbl">سهل (القشرة)</span>
+        </div>
+        <div class="mode-card" data-mode="medium">
+          <span class="n num" id="cnt-medium">-</span>
+          <span class="lbl">متوسط (الستار)</span>
+        </div>
+        <div class="mode-card" data-mode="hard">
+          <span class="n num" id="cnt-hard">-</span>
+          <span class="lbl">صعب (اللب)</span>
+        </div>
+      </div>
+
+      <div id="bestScoreBox" style="display:none; margin-bottom:18px; color:var(--ink-dim); font-size:.9rem;">
+        أفضل نتيجة سابقة لك: <strong class="num" style="color:var(--spark)" id="bestScoreVal">-</strong> / 100
+      </div>
+
+      <div id="mistakesBox" style="display:none; margin-bottom:18px; padding:14px 16px; border:1px solid var(--line-strong); border-radius:12px; background:var(--error-soft);">
+        عندك <strong class="num" id="mistakesCount">0</strong> سؤال أخطأت فيهم بالمحاولة اللي فاتت.
+        <button class="btn btn-ghost" id="reviewMistakesBtn" style="margin-inline-start:10px; padding:8px 16px; font-size:.85rem;">راجعهم الآن</button>
+      </div>
+
+      <button class="btn btn-primary btn-block" id="startBtn">ابدأ الاختبار ⛏</button>
+    </div>
+  </section>
+
+  <!-- ============ شاشة الاختبار ============ -->
+  <section id="quizScreen" style="display:none;">
+    <div class="strata-track" id="strataTrack">
+      <div class="drill-bit" id="drillBit"></div>
+    </div>
+    <div class="quiz-topline">
+      <span id="qCounter">سؤال 1 من 60</span>
+      <span class="score-live num" id="liveScore"></span>
+    </div>
+
+    <div class="q-wrap">
+      <div class="q-card">
+        <div class="q-head">
+          <span id="importantBadge" class="important-badge" style="display:none;">⚠ سؤال مهم — انتبه له</span>
+        </div>
+        <p class="q-text" id="qText">...</p>
+
+        <div class="opts" id="optsWrap"></div>
+
+        <div class="q-actions">
+          <button class="help-btn" id="helpBtn">💡 مساعدة (احذف إجابتين خاطئتين)</button>
+          <button class="btn btn-primary" id="nextBtn" style="display:none;">السؤال التالي ←</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ شاشة النتيجة ============ -->
+  <section id="resultScreen" style="display:none;">
+    <div class="result-hero">
+      <div class="gauge-wrap">
+        <svg class="gauge" viewBox="0 0 180 180">
+          <circle class="track" cx="90" cy="90" r="80"></circle>
+          <circle class="fill" id="gaugeFill" cx="90" cy="90" r="80"></circle>
+        </svg>
+        <div class="gauge-text">
+          <div class="gauge-label"><span class="num" id="scoreLabel">0</span></div>
+          <small>من 100</small>
+        </div>
+      </div>
+      <div>
+        <h2 style="font-size:1.5rem;">نتيجتك</h2>
+        <p class="result-msg" id="resultMsg">...</p>
+      </div>
+    </div>
+
+    <div class="breakdown" id="breakdown"></div>
+
+    <div class="section-head">
+      <h2>أسئلة للمراجعة</h2>
+      <span class="count">أخطاؤك + الأسئلة يلي استخدمت فيها مساعدة</span>
+    </div>
+    <div class="review-list" id="reviewList"></div>
+
+    <div class="section-head" id="importantSectionHead" style="display:none;">
+      <h2>⚠ أسئلة مهمة</h2>
+      <span class="count">لازم تعيد التأكد منها ولو جاوبتها صح</span>
+    </div>
+    <div class="review-list" id="importantList"></div>
+
+    <div class="result-actions">
+      <button class="btn btn-primary" id="retryBtn">إعادة الاختبار من جديد</button>
+      <button class="btn btn-ghost" id="retryMistakesBtn" style="display:none;">راجع أخطاءك فقط</button>
+      <a class="btn btn-ghost" href="subject-earth-science.html">رجوع للدرس</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">علامتك تُحسب من 100 · المساعدة تحذف إجابتين خاطئتين لكل سؤال</footer>
+
+<script src="data/earth-science-unit4-lesson2.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/quiz.js"></script>
+</body>
+</html>
